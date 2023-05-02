@@ -38,30 +38,19 @@ int main(int argc, char *argv[])
          << " internal faces in it. Wubalubadubdub!" << nl << endl;
 
     std::set<std::pair<label, label>> cellPairs;
-    forAll(mesh.C(), cell)
-    {
-       
-        labelList neighborEdge = mesh.cellPoints()[cell];
-
-
-        forAll(neighborEdge, edgej)
-        {
-            labelList neighborCell = mesh.pointCells()[neighborEdge[edgej]];
-            forAll(neighborCell, cellj)
-                cellPairs.insert(std::make_pair(cell, neighborCell[cellj]));
-        }
-    }
 
     //writing set to file
     std::ofstream file;
     file.open("cellPairs.txt");
-    for (auto& x : cellPairs)
+    
+    for (int i = 0; i < mesh.C().size(); i++)
     {
-        file << x.first << " " << x.second << std::endl;
+        for (auto neigborsCells : mesh.cellCells()[i])
+        {
+            file << i << " " << neigborsCells << std::endl;
+        }
     }
     file.close();
-   
-    Info << endl; 
 
     return 0;
 }
